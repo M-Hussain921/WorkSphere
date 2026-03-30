@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+html{
+  background: var(#F8FAFC);
+  font-family: 'PT Sans', sans-serif;
+}
+
+button,h1,h2,h3{
+  font-family: 'Nunito',sans-serif;
+}
+
+.logo{
+  font-family: 'Nunito',sans-serif;
+}
