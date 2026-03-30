@@ -14,15 +14,15 @@ import {
 } from "lucide-react";
 
 const MENU_ITEMS = [
-  { key: "",   label: "Dashboard",   icon: LayoutDashboard, roles: ["admin","hr","employee"] },
-  { key: "profile",     label: "Profile",     icon: User,            roles: ["admin","hr","employee"] },
-  { key: "employees",   label: "Employees",   icon: Users,           roles: ["admin","hr"] },
-  { key: "departments", label: "Departments", icon: Building2,       roles: ["admin","hr"] },
-  { key: "reports",     label: "Reports",     icon: BarChart3,       roles: ["admin"] },
+  { key: "", label: "Dashboard", icon: LayoutDashboard, roles: ["admin", "hr", "employee"] },
+  { key: "profile", label: "Profile", icon: User, roles: ["admin", "hr", "employee"] },
+  { key: "employees", label: "Employees", icon: Users, roles: ["admin", "hr"] },
+  { key: "departments", label: "Departments", icon: Building2, roles: ["admin", "hr"] },
+  { key: "reports", label: "Reports", icon: BarChart3, roles: ["admin"] },
 ];
 
-function Sidebar({ open, setOpen }) {
-
+function Sidebar() {
+  const [open, setOpen] = useState(true)
   const [role, setRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,9 +58,9 @@ function Sidebar({ open, setOpen }) {
       <aside className={`
         fixed lg:static inset-y-0 left-0 z-30
         w-64 bg-slate-900 flex flex-col h-screen
-        transform transition-transform duration-300
-        ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-      `}>
+        transform transition-transform duration-300 lg:translate-x-0
+        ${open ? "translate-x-0" : "-translate-x-full" }
+          `}>
 
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 py-3.5 border-b border-slate-700/50">
@@ -96,32 +96,32 @@ function Sidebar({ open, setOpen }) {
                       setOpen(false);
                     }}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition
-                      ${active
-                        ? "bg-indigo-600 text-white"
-                        : "text-slate-400 hover:bg-slate-800 hover:text-white"}`}
+      ${active
+        ? "bg-indigo-600 text-white"
+        : "text-slate-400 hover:bg-slate-800 hover:text-white"}`}
                   >
-                    <item.icon size={17} />
-                    {item.label}
-                    {active && <ChevronRight size={14} className="ml-auto" />}
-                  </button>
-                </li>
+      <item.icon size={17} />
+      {item.label}
+      {active && <ChevronRight size={14} className="ml-auto" />}
+    </button >
+                </li >
               );
-            })}
-          </ul>
-        </nav>
+})}
+          </ul >
+        </nav >
 
-        {/* Bottom */}
-        <div className="px-3 pb-5 border-t border-slate-700/50 pt-4">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-400 hover:bg-red-900/30 hover:text-red-400"
-          >
-            <LogOut size={17} />
-            Logout
-          </button>
-        </div>
+  {/* Bottom */ }
+  < div className = "px-3 pb-5 border-t border-slate-700/50 pt-4" >
+    <button
+      onClick={handleLogout}
+      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-400 hover:bg-red-900/30 hover:text-red-400"
+    >
+      <LogOut size={17} />
+      Logout
+    </button>
+        </div >
 
-      </aside>
+      </aside >
     </>
   );
 }
