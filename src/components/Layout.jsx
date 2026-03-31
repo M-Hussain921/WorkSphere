@@ -12,8 +12,8 @@ const Layout = () => {
 
             <div className="fixed left-0 top-0 h-full w-64 ">
                 <Sidebar
-                open={open}
-                setOpen={setOpen}
+                open={sidebarOpen}
+                setOpen={setSidebarOpen}
                 />
             </div>
 

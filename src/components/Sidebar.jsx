@@ -21,8 +21,7 @@ const MENU_ITEMS = [
   { key: "reports", label: "Reports", icon: BarChart3, roles: ["admin"] },
 ];
 
-function Sidebar() {
-  const [open, setOpen] = useState(true)
+function Sidebar({open,setOpen}) {
   const [role, setRole] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,13 +49,13 @@ function Sidebar() {
       {/* Overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/40 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/40 z-50 lg:hidden"
           onClick={() => setOpen(false)}
         />
       )}
 
       <aside className={`
-        fixed lg:static inset-y-0 left-0 z-30
+        fixed lg:static inset-y-0 left-0 z-50
         w-64 bg-slate-900 flex flex-col h-screen
         transform transition-transform duration-300 lg:translate-x-0
         ${open ? "translate-x-0" : "-translate-x-full" }

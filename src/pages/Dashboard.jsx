@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import {useState, useMemo, useEffect} from "react";
 import API from "../utils/axios";
 import {
   Users,
@@ -19,44 +19,44 @@ import {
   Cell,
 } from "recharts";
 
-function Dashboard({ role }) {
+function Dashboard({ role}) {
 
-  const [employees, setEmployees] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [loading, setLoading] = useState(true);
+const [employees,setEmployees]=useState([]);
+const [departments, setDepartments]=useState([]);
+const [loading,setLoading]=useState(true);
 
-  const status = (employees) => {
+const status = (employees) => {
     return employees.isDeleted ? "Inactive" : "Active";
   }
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const empRes = await API.get('/user/all-employee');
-        const depRes = await API.get('/department/all-department');
+useEffect(()=>{
+const fetchData=async ()=>{
+    try{
+      const empRes= await API.get('/user/all-employee');
+      const depRes= await API.get('/department/all-department');
 
-        setEmployees(empRes.data);
-        setDepartments(depRes.data);
-        // console.log(empRes.data)
-        // console.log(depRes.data)
-      } catch (err) {
-        console.error("API error", err)
-      } finally {
-        setLoading(false);
-      };
+      setEmployees(empRes.data);
+      setDepartments(depRes.data);
+      // console.log(empRes.data)
+      // console.log(depRes.data)
+    } catch(err){
+      console.error("API error",err)
+    } finally{
+      setLoading(false);
     };
-    fetchData();
-  }, []);
+  };
+  fetchData();
+},[]);
 
-  const active = (employees || []).filter(
-    (emp) => emp.isDeleted === false
-  );
+ const active = (employees || []).filter(
+  (emp) => emp.isDeleted === false
+);
 
   const stats = [
     {
       title: "Total Employees",
-      value: employees?.length || 0,
+      value: employees?.length||0,
       sub: "this month",
       trend: 8,
       icon: Users,
@@ -72,28 +72,28 @@ function Dashboard({ role }) {
     },
     {
       title: "Departments",
-      value: departments?.length || 0,
+      value: departments?.length||0,
       sub: "operational",
       trend: 0,
       icon: Building2,
       color: "bg-violet-500"
     },
-
+  
     {
       title: "Avg Salary",
       value:
         employees?.length > 0
           ? Math.round(
-            employees.reduce((acc, e) => acc + (e.salary || 0), 0) /
-            employees.length
-          )
+              employees.reduce((acc, e) => acc + (e.salary || 0), 0) /
+                employees.length
+            )
           : 0,
       icon: Clock,
       color: "bg-amber-500",
     },
   ];
 
-  const deptData = useMemo(() => {
+   const deptData = useMemo(() => {
     const map = {};
     employees?.forEach(emp => {
       const dept = emp.department?.name || "Unknown";
@@ -107,9 +107,9 @@ function Dashboard({ role }) {
     }));
   }, [employees]);
 
-  return (
-    <div className="space-y-6 mt-4">
-
+    return (
+    <div className="space-y-6 mt-4 overflow-hidden">
+    
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {stats.map((s, i) => (
           <div
@@ -127,10 +127,10 @@ function Dashboard({ role }) {
         ))}
       </div>
 
-
+    
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-
+        
         <div className="xl:col-span-2 bg-white p-5 rounded-xl shadow border border-slate-100">
           <h3 className="font-bold mb-4">Employees Trend</h3>
 
@@ -149,7 +149,7 @@ function Dashboard({ role }) {
           )}
         </div>
 
-
+    
         <div className="bg-white p-5 rounded-xl shadow border border-slate-100">
           <h3 className="font-bold mb-4">Department</h3>
 
@@ -179,7 +179,7 @@ function Dashboard({ role }) {
         </div>
       </div>
 
-
+      
       <div className="bg-white rounded-xl shadow border border-slate-100">
         <div className="px-5 py-3 border-b border-slate-100 font-bold">
           Recent Employees
@@ -208,7 +208,7 @@ function Dashboard({ role }) {
         )}
       </div>
 
-
+      
       {role === "admin" && (
         <div className="bg-white p-5 rounded-xl shadow border">
           <h3 className="font-bold">Admin Panel</h3>
