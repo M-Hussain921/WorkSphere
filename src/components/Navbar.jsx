@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { jwtDecode } from "jwt-decode";
 import API from "../utils/axios";
 import { getAvatar } from "../utils/avatar";
+import { useLocation } from "react-router-dom";
 import {
   Menu,
   Bell,
@@ -22,13 +23,14 @@ const ROLE_CONFIG = {
   employee: { label: "Employee", color: "bg-green-100 text-green-600" },
 };
 
-function Navbar({ sidebarOpen, setSidebarOpen, currentPage, setPage }) {
+function Navbar({ sidebarOpen, setSidebarOpen }) {
 
   const [dropOpen, setDropOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const dropRef = useRef(null);
   const navigate = useNavigate();
+  const location=useLocation();
 
   const avatar = getAvatar(currentUser?.user?.name);
 
@@ -36,11 +38,11 @@ function Navbar({ sidebarOpen, setSidebarOpen, currentPage, setPage }) {
     const decoded = jwtDecode(token);
 
   const PAGE_TITLES = {
-    dashboard: "Dashboard",
-    profile: "My Profile",
-    employees: "Employees",
-    departments: "Departments",
-    reports: "Reports"
+    "/": "Dashboard",
+    "/home/profile": "My Profile",
+    "/home/employees": "Employees",
+    "/home/departments": "Departments",
+    "/home/reports": "Reports"
   };
 
 
@@ -88,7 +90,7 @@ function Navbar({ sidebarOpen, setSidebarOpen, currentPage, setPage }) {
     
       <div>
         <h1 className="font-bold text-slate-800 text-lg">
-          {PAGE_TITLES[currentPage] || "Dashboard"}
+          {PAGE_TITLES[location.pathname] || "Dashboard"}
         </h1>
         <p className="text-xs text-slate-400">
           Welcome back, {currentUser?.user?.name.toUpperCase() || "User"}
@@ -154,9 +156,9 @@ function Navbar({ sidebarOpen, setSidebarOpen, currentPage, setPage }) {
               </div>
 
               <button
-              onClick={()=>setPage("profile")}
+              onClick={()=>navigate("profile")}
               className="w-full text-left px-4 py-2 hover:bg-gray-100 flex gap-2">
-                <User size={14} /> Profile
+                <User size={14} />My Profile
               </button>
 
               <button className="w-full text-left px-4 py-2 hover:bg-gray-100 flex gap-2">
