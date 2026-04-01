@@ -1,12 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import API from "../utils/axios";
 import { jwtDecode } from "jwt-decode";
 import { getAvatar } from "../utils/avatar";
 import { Edit2, Mail, Phone, MapPin, Calendar, Award } from "lucide-react";
+import EditProfile from "../components/EditProfileForm";
 
 function ProfilePage() {
 
   const [user, setUser] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
+
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    function handler(e) {
+      if (formRef.current && !formRef.current.contains(e.target)) {
+        setEditOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   const avatar = getAvatar(user?.user?.name);
   console.log(user)
@@ -27,10 +41,10 @@ function ProfilePage() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userId=decoded.id||decoded._id;
+        const userId = decoded.id || decoded._id;
         const res = await API.get(`/user/employee/${userId}`);
         console.log(res.data.data);
-        console.log("API RESPONSE:", res);      
+        console.log("API RESPONSE:", res);
         console.log("DATA:", res.data.data);
         setUser(res.data.data);
       } catch (err) {
@@ -55,10 +69,17 @@ function ProfilePage() {
               <h2 className="text-xl font-bold text-slate-800">{user?.user?.name}</h2>
               <p className="text-slate-500 text-sm">{user?.designation}</p>
             </div>
-            <div className="ml-auto pb-2">
-              <button className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-sm rounded-xl hover:bg-indigo-700 transition shadow-sm font-medium">
+            <div ref={formRef} className="ml-auto pb-2">
+              <button 
+              onClick={()=>setEditOpen(!editOpen)}
+              className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white text-sm rounded-xl hover:bg-indigo-700 transition shadow-sm font-medium">
                 <Edit2 size={13} /> Edit Profile
-              </button>
+              </button> 
+              {editOpen&&(
+                <div className="relative">
+                  <EditProfile formRef={formRef} user={user} setuser={setUser} />
+                  </div>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
