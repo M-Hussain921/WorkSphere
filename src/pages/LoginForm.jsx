@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../utils/axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ const LoginForm = () => {
     const [bg, setBg] = useState("");
 
     useEffect(() => {
-        axios.get("http://localhost:8000/forms-page-image")
+        API.get("/forms-page-image")
             .then(res => setBg(res.data.image));
     }, []);
 
@@ -28,7 +28,7 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:8000/auth/user/login',
+            const res = await API.post('/auth/user/login',
                 formData
             );
             console.log(formData);
