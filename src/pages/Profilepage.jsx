@@ -23,7 +23,7 @@ function ProfilePage() {
   }, []);
 
   const avatar = getAvatar(user?.user?.name);
-  console.log(user)
+  // console.log(user)
 
   const token = localStorage.getItem("token");
   const decoded = jwtDecode(token);
@@ -43,9 +43,9 @@ function ProfilePage() {
       try {
         const userId = decoded.id || decoded._id;
         const res = await API.get(`/user/employee/${userId}`);
-        console.log(res.data.data);
-        console.log("API RESPONSE:", res);
-        console.log("DATA:", res.data.data);
+        // console.log(res.data.data);
+        // console.log("API RESPONSE:", res);
+        // console.log("DATA:", res.data.data);
         setUser(res.data.data);
       } catch (err) {
         console.error("FETCH ERROR:", err.response?.data || err.message);
@@ -76,7 +76,7 @@ function ProfilePage() {
                 <Edit2 size={13} /> Edit Profile
               </button> 
               {editOpen&&(
-                <div className="relative">
+                <div className="absoulte z-10">
                   <EditProfile formRef={formRef} user={user} setuser={setUser} />
                   </div>
               )}

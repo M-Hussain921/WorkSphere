@@ -31,14 +31,9 @@ const LoginForm = () => {
             const res = await API.post('/auth/user/login',
                 formData
             );
-            console.log(formData);
-            console.log(res.data);
             localStorage.setItem("token", res.data.token);
-
             navigate("/home");
-
             alert("login successfully");
-
         } catch (err) {
             console.log(err.response?.data || err.message);
             alert("Login failed");
@@ -48,7 +43,7 @@ const LoginForm = () => {
     return (
 
         <div
-            className="min-h-screen  w-full bg-cover bg-center bg-no-repeat grid place-items-center" style={{ backgroundImage: `url(${bg})` }}>
+            className="min-h-screen   w-full bg-cover bg-center bg-no-repeat grid place-items-center" style={{ backgroundImage: `url(${bg})` }}>
 
             <div className="bg-card relative left-80 z-40 p-8 rounded-2xl shadow-card w-full max-w-md border-2 border-gray-400">
 
@@ -58,9 +53,6 @@ const LoginForm = () => {
         text-cyan-700 tracking-widest font-nunito pt-4 text-center 
                     text-text mb-6">WorkSphere</h2>
                 </div>
-
-
-
 
                 <form onSubmit={handleSubmit} className="space-y-4">
 
