@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import { jwtDecode } from "jwt-decode";
 import { getAvatar } from "../utils/avatar";
-import { Search, Filter, Users, Eye, Edit2, Trash2, Plus } from "lucide-react";
+import { Search, Filter, Users, Eye, Edit2, Trash2, Plus, Option } from "lucide-react";
 
 
 const EmployeesPage = () => {
@@ -11,6 +11,7 @@ const EmployeesPage = () => {
   const [employees, setEmployees] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [department,setDepartment]=useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,15 +20,17 @@ const EmployeesPage = () => {
   const decoded = jwtDecode(token);
 
   useEffect(() => {
-    const fetchTotalEmp = async () => {
+    const fetchTotalEmpAndDep = async () => {
       try {
         const userId = decoded.id || decoded._id;
-        console.log({ userId: userId });
+        // console.log({ userId: userId });
 
-        const res = await API.get(`/user/all-employee`);
-        console.log("api data:", res.data)
+        const totalEmp = await API.get(`/user/all-employee`);
+        const totalDep = await API.get(`/department/all-department`);
+        // console.log("api data:", res.data)
 
-        setEmployees(res.data);
+        setEmployees(totalEmp.data);
+        setDepartment(totalDep.data);
 
       } catch (err) {
         console.error("FETCH ERROR:", err.response?.data || err.message);
@@ -35,7 +38,7 @@ const EmployeesPage = () => {
         setLoading(false);
       };
     }
-    fetchTotalEmp();
+    fetchTotalEmpAndDep();
   }, []);
 
   useEffect(() => { setTimeout(() => setLoading(false), 900); }, []);
@@ -63,6 +66,28 @@ const EmployeesPage = () => {
     );
   }
 
+  const fillteredEmp = employees.filter(emp => {
+    const nameMatch = emp.user.name.toLowerCase().includes(search.toLowerCase());
+
+    let statusMatch = true;
+    if(filter==="active") statusMatch=!emp.isDeleted
+    else if(filter==="inactive") statusMatch=emp.isDeleted;
+
+    let departmentMatch = true;
+    if(
+      filter!=="all"&&filter!=="active"&&filter!=="inactive"
+    ){ departmentMatch=filter===emp.department?._id}
+
+    return nameMatch && statusMatch && departmentMatch;
+  });
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleFilter = (e) => {
+    setFilter(e.target.value)
+  };
 
   function deleteEmployee(id) {
     setEmployees(prev => prev.filter(e => e.id !== id));
@@ -96,7 +121,7 @@ const EmployeesPage = () => {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={handleSearch}
               placeholder="Search employees..."
               className="pl-8 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl w-52 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 transition"
             />
@@ -107,18 +132,16 @@ const EmployeesPage = () => {
 
             <select
               value={filter}
-              onChange={e => setFilter(e.target.value)}
+              onChange={handleFilter}
               className="pl-8 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-200 cursor-pointer"
             >
 
               <option value="all">All</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
-              <option value="Engineering">Engineering</option>
-              <option value="HR">HR</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Design">Design</option>
-              <option value="Finance">Finance</option>
+              {department.map(dep=>(
+                <option key={dep._id} value={dep._id}>{dep.name}</option>
+                ))}
 
             </select>
 
@@ -156,7 +179,7 @@ const EmployeesPage = () => {
                   Loading...
                 </td>
               </tr>)
-              : employees.length === 0 ? (
+              : fillteredEmp.length === 0 ? (
                 <tr>
                   <td colSpan={6}>
                     <EmptyState
@@ -166,7 +189,7 @@ const EmployeesPage = () => {
                   </td>
                 </tr>
               )
-                : employees.map(emp => {
+                : fillteredEmp.map(emp => {
                   const { initials, color } = getAvatar(emp?.user?.name);
                   return (
                     <tr
